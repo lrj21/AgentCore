@@ -36,7 +36,7 @@ class MonitoringAgentExecutor(AgentExecutor):
             # Get configuration from environment
             memory_id = os.getenv("MEMORY_ID")
             model_id = os.getenv(
-                "MODEL_ID", "global.anthropic.claude-sonnet-4-20250514-v1:0"
+                "MODEL_ID", "amazon.nova-pro-v1:0"
             )
             region_name = os.getenv("MCP_REGION")
 

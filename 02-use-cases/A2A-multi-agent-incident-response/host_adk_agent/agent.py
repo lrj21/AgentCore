@@ -10,7 +10,7 @@ import os
 import uuid
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
-GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "gemini-2.5-flash")
+GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "amazon.nova-pro-v1:0")
 
 if IS_DOCKER:
     from utils import get_ssm_parameter, get_aws_info

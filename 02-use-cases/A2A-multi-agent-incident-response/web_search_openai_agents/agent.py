@@ -2,7 +2,7 @@ import os
 import logging
 from pathlib import Path
 from dotenv import load_dotenv
-from agents import Agent, Runner
+from agent import Agent, Runner
 from prompt import SYSTEM_PROMPT
 from tools import _get_memory_tools, web_search_impl
 
@@ -16,7 +16,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise RuntimeError("Missing OPENAI_API_KEY environment variable")
 
-MODEL_ID = os.getenv("MODEL_ID", "gpt-4o-2024-08-06")
+MODEL_ID = os.getenv("MODEL_ID", "amazon.nova-pro-v1:0")
 MEMORY_ID = os.getenv("MEMORY_ID")
 if not MEMORY_ID:
     raise RuntimeError("Missing MEMORY_ID environment variable")

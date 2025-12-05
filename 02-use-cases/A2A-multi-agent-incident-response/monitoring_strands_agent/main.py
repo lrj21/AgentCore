@@ -7,6 +7,7 @@ from starlette.responses import JSONResponse
 import logging
 import os
 import uvicorn
+import boto3
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,7 +16,7 @@ ssm = boto3.client("ssm")
 agentcore_client = boto3.client("bedrock-agentcore")
 
 # Configuration with validation
-MODEL_ID = os.getenv("MODEL_ID", "global.anthropic.claude-haiku-4-5-20251001-v1:0")
+MODEL_ID = os.getenv("MODEL_ID", "amazon.nova-pro-v1:0")
 
 MEMORY_ID = os.getenv("MEMORY_ID")
 if not MEMORY_ID:
