@@ -5,7 +5,7 @@ import logging
 import time
 from typing import Dict, Optional
 from bedrock_agentcore.memory import MemoryClient
-from agent import function_tool
+from agents import function_tool
 
 logger = logging.getLogger(__name__)
 

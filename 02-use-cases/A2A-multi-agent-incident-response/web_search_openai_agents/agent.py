@@ -2,7 +2,7 @@ import os
 import logging
 from pathlib import Path
 from dotenv import load_dotenv
-from agent import Agent, Runner
+from agents import Agent, Runner
 from prompt import SYSTEM_PROMPT
 from tools import _get_memory_tools, web_search_impl
 
