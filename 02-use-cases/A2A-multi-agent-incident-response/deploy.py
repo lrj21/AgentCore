@@ -537,10 +537,10 @@ def collect_deployment_parameters(account_id: str = None) -> Dict[str, Any]:
             default=(
                 existing_config.get("github", {}).get(
                     "url",
-                    "https://github.com/awslabs/amazon-bedrock-agentcore-samples.git",
+                    "https://github.ibm.com/Ren-Jie-Li/AgentCore.git",
                 )
                 if use_existing
-                else "https://github.com/awslabs/amazon-bedrock-agentcore-samples.git"
+                else "https://github.ibm.com/Ren-Jie-Li/AgentCore.git"
             ),
             required=True,
         ),
