@@ -8,11 +8,11 @@ from urllib.parse import quote
 import httpx
 import os
 import uuid
-from google.adk.models.base_llm import BaseModel
+from google.adk.models.base_llm import BaseLlm
 import boto3
 from pydantic import Field
 
-class AWSBedrockModel(BaseModel):
+class AWSBedrockLlm(BaseLlm):
     model_id: str = Field(...)
     region_name: str = Field(default="us-west-2")
     client: boto3.client = None
@@ -169,7 +169,7 @@ def get_root_agent(session_id: str, actor_id: str):
         ),
     )
 
-    aws_model = AWSBedrockModel(
+    aws_model = AWSBedrockLlm(
         model_id=os.getenv("GOOGLE_MODEL_ID"),
         region_name=region,
     )
