@@ -3,12 +3,34 @@ from a2a.types import TransportProtocol
 from bedrock_agentcore.identity.auth import requires_access_token
 from google.adk.agents.llm_agent import Agent
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
-from host_adk_agent.AWSBedrockModel import AWSBedrockModel
 from prompt import SYSTEM_PROMPT
 from urllib.parse import quote
 import httpx
 import os
 import uuid
+from google.adk.models.base_llm import BaseModel
+import boto3
+
+class AWSBedrockModel(BaseModel):
+    """
+    适配 AWS Bedrock 的 BaseModel
+    可以直接传给 ADK Agent 的 model 参数
+    """
+    def __init__(self, model_id: str, region_name: str = "us-west-2"):
+        super().__init__()
+        self.model_id = model_id
+        self.client = boto3.client("bedrock", region_name=region_name)
+
+    def generate(self, prompt: str, **kwargs):
+        """
+        兼容 ADK BaseModel 的 generate 接口
+        """
+        response = self.client.invoke_model(
+            modelId=self.model_id,
+            body=prompt.encode("utf-8"),
+            contentType="text/plain"
+        )
+        return response['body'].read().decode("utf-8")
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
 GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0")
