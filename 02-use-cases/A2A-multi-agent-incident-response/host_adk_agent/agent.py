@@ -8,66 +8,7 @@ from urllib.parse import quote
 import httpx
 import os
 import uuid
-from google.adk.models.base_llm import BaseLlm
-import boto3
-from pydantic import Field
 
-class AWSBedrockLlm(BaseLlm):
-    """
-    完整适配 ADK BaseLlm 抽象接口的 AWS Bedrock LLM 封装
-    """
-
-    model_id: str = Field(...)
-    region_name: str = Field(default="us-west-2")
-    client: boto3.client = None
-
-    def model_post_init(self, __context):
-        """
-        Pydantic v2 的初始化入口
-        """
-        self.client = boto3.client("bedrock-runtime", region_name=self.region_name)
-
-    # ---------------------------------------------------------------------
-    # ① ADK 要求实现：async generate(prompt: str, **kwargs)
-    # ---------------------------------------------------------------------
-    async def generate(self, prompt: str, **kwargs) -> str:
-        payload = {
-            "prompt": prompt,
-            "max_tokens": 4096,
-        }
-
-        response = self.client.invoke_model(
-            modelId=self.model_id,
-            body=json.dumps(payload).encode("utf-8"),
-            contentType="application/json",
-            accept="application/json",
-        )
-
-        res_body = json.loads(response["body"].read())
-        return res_body.get("completion", "")
-
-    # ---------------------------------------------------------------------
-    # ② ADK 要求实现：async generate_content_async(messages)
-    # ---------------------------------------------------------------------
-    async def generate_content_async(self, messages, **kwargs) -> str:
-        """
-        messages = [{"role": "user", "content": "..."}]
-        转换成 prompt 方式传给 Bedrock
-        """
-        prompt = ""
-
-        for msg in messages:
-            role = msg.get("role", "user")
-            content = msg.get("content", "")
-
-            if role == "user":
-                prompt += f"User: {content}\n"
-            elif role == "assistant":
-                prompt += f"Assistant: {content}\n"
-
-        prompt += "Assistant:"
-
-        return await self.generate(prompt)
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
 GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0")
@@ -210,14 +151,9 @@ def get_root_agent(session_id: str, actor_id: str):
         ),
     )
 
-    aws_model = AWSBedrockLlm(
-        model_id=os.getenv("GOOGLE_MODEL_ID"),
-        region_name=region,
-    )
-
     # Create root agent
     root_agent = Agent(
-        model=aws_model,
+        model=GOOGLE_MODEL_ID,
         name="root_agent",
         instruction=SYSTEM_PROMPT,
         sub_agents=[monitor_agent, websearch_agent],
