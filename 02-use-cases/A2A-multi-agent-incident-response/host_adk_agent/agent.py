@@ -3,6 +3,7 @@ from a2a.types import TransportProtocol
 from bedrock_agentcore.identity.auth import requires_access_token
 from google.adk.agents.llm_agent import Agent
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
+from host_adk_agent.AWSBedrockModel import AWSBedrockModel
 from prompt import SYSTEM_PROMPT
 from urllib.parse import quote
 import httpx
@@ -10,7 +11,7 @@ import os
 import uuid
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
-GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "gemini-2.5-flash")
+GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0")
 
 if IS_DOCKER:
     from utils import get_ssm_parameter, get_aws_info
@@ -150,9 +151,11 @@ def get_root_agent(session_id: str, actor_id: str):
         ),
     )
 
+    aws_model = AWSBedrockModel(model_id=GOOGLE_MODEL_ID)
+
     # Create root agent
     root_agent = Agent(
-        model=GOOGLE_MODEL_ID,
+        model=aws_model,
         name="root_agent",
         instruction=SYSTEM_PROMPT,
         sub_agents=[monitor_agent, websearch_agent],
