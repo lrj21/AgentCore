@@ -10,27 +10,23 @@ import os
 import uuid
 from google.adk.models.base_llm import BaseModel
 import boto3
+from pydantic import Field
 
 class AWSBedrockModel(BaseModel):
-    """
-    适配 AWS Bedrock 的 BaseModel
-    可以直接传给 ADK Agent 的 model 参数
-    """
-    def __init__(self, model_id: str, region_name: str = "us-west-2"):
-        super().__init__()
-        self.model_id = model_id
-        self.client = boto3.client("bedrock", region_name=region_name)
+    model_id: str = Field(...)
+    region_name: str = Field(default="us-west-2")
+    client: boto3.client = None
+
+    def model_post_init(self, __context):
+        self.client = boto3.client("bedrock", region_name=self.region_name)
 
     def generate(self, prompt: str, **kwargs):
-        """
-        兼容 ADK BaseModel 的 generate 接口
-        """
         response = self.client.invoke_model(
             modelId=self.model_id,
             body=prompt.encode("utf-8"),
             contentType="text/plain"
         )
-        return response['body'].read().decode("utf-8")
+        return response["body"].read().decode("utf-8")
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
 GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0")
@@ -173,7 +169,10 @@ def get_root_agent(session_id: str, actor_id: str):
         ),
     )
 
-    aws_model = AWSBedrockModel(model_id=GOOGLE_MODEL_ID)
+    aws_model = AWSBedrockModel(
+        model_id=os.getenv("GOOGLE_MODEL_ID"),
+        region_name=region,
+    )
 
     # Create root agent
     root_agent = Agent(
