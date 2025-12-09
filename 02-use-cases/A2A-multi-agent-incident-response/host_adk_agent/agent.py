@@ -154,7 +154,7 @@ def get_root_agent(session_id: str, actor_id: str):
 
     # Create root agent
     root_agent = Agent(
-        model=LiteLlm(model_id=GOOGLE_MODEL_ID),
+        model=LiteLlm(model=GOOGLE_MODEL_ID),
         name="root_agent",
         instruction=SYSTEM_PROMPT,
         sub_agents=[monitor_agent, websearch_agent],
