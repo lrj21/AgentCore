@@ -12,7 +12,7 @@ import uuid
 
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
-GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "bedrock/amazon.nova-pro-v1:0")
+GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "bedrock/arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0")
 
 if IS_DOCKER:
     from utils import get_ssm_parameter, get_aws_info
