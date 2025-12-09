@@ -5,13 +5,14 @@ from google.adk.agents.llm_agent import Agent
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 from prompt import SYSTEM_PROMPT
 from urllib.parse import quote
+from google.adk.models.lite_llm import LiteLlm
 import httpx
 import os
 import uuid
 
 
 IS_DOCKER = os.getenv("DOCKER_CONTAINER", "0") == "1"
-GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "gemini-2.5-flash")
+GOOGLE_MODEL_ID = os.getenv("GOOGLE_MODEL_ID", "bedrock/amazon.nova-pro-v1:0")
 
 if IS_DOCKER:
     from utils import get_ssm_parameter, get_aws_info
@@ -153,7 +154,7 @@ def get_root_agent(session_id: str, actor_id: str):
 
     # Create root agent
     root_agent = Agent(
-        model=GOOGLE_MODEL_ID,
+        model=LiteLlm(model_id=GOOGLE_MODEL_ID),
         name="root_agent",
         instruction=SYSTEM_PROMPT,
         sub_agents=[monitor_agent, websearch_agent],
