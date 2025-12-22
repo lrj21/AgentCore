@@ -138,8 +138,9 @@ Resources:
                   - bedrock-agentcore:CreateEvent
                   - bedrock-agentcore:GetEvent
                 Resource:
-                  - !GetAtt AgentMemory.MemoryArn
-                  - !Sub '${AgentMemory.MemoryArn}/*'
+                  # - !GetAtt AgentMemory.MemoryArn
+                  # - !Sub '${AgentMemory.MemoryArn}/*'
+                  - '*'
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName}-Runtime-Role'
