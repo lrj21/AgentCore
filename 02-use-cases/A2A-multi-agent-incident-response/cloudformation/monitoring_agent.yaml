@@ -5,7 +5,7 @@ Parameters:
   BedrockModelId:
     Type: String
     Description: Amazon Bedrock model id
-    Default: 'global.anthropic.claude-haiku-4-5-20251001-v1:0'
+    Default: 'arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0'
 
   GitHubURL:
     Type: String
@@ -864,7 +864,7 @@ Resources:
 
                     Format each extracted fact as a clear, concise statement that could stand alone as a reference point in a monitoring dashboard.
                     Assistant:
-                  ModelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0"
+                  ModelId: "arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0"
                 Consolidation:
                   AppendToPrompt: |
                     Human: You are a monitoring knowledge manager responsible for maintaining a coherent database of AWS infrastructure and application metrics.
@@ -888,7 +888,7 @@ Resources:
 
                     The monitoring knowledge base must maintain both precision and temporal context to support effective incident analysis and pattern recognition.
                     Assistant:
-                  ModelId: "global.anthropic.claude-haiku-4-5-20251001-v1:0"
+                  ModelId: "arn:aws:bedrock:us-west-2:345568587821:inference-profile/us.amazon.nova-pro-v1:0"
         - SemanticMemoryStrategy: 
             Name: SemanticMemory
             Namespaces:
