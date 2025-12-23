@@ -814,6 +814,25 @@ Resources:
                   - bedrock:InvokeModelWithResponseStream
                 Resource:
                   - 'arn:aws:bedrock:*::foundation-model/*'
+          # 修改memory策略，添加CreateMemory权限和模型元数据权限
+        - PolicyName: MemoryCreateControlPlaneAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # 1️⃣ CreateMemory 本身
+              - Sid: CreateMemory
+                Effect: Allow
+                Action:
+                  - bedrock-agentcore:CreateMemory
+                Resource: "*"
+
+              # 2️⃣ CreateMemory 阶段模型校验（非常关键）
+              - Sid: BedrockModelMetadata
+                Effect: Allow
+                Action:
+                  - bedrock:GetFoundationModel
+                  - bedrock:ListFoundationModels
+                Resource: "*"
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName}-Memory-Execution-Role'
