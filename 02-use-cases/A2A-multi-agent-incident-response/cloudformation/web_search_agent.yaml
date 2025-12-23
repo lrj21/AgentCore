@@ -813,7 +813,8 @@ Resources:
                   - bedrock:InvokeModel
                   - bedrock:InvokeModelWithResponseStream
                 Resource:
-                  - 'arn:aws:bedrock:*::foundation-model/*'
+                  # - 'arn:aws:bedrock:*::foundation-model/*'
+                  - arn:aws:bedrock:*:*:inference-profile/*
           # 修改memory策略，添加CreateMemory权限和模型元数据权限
         - PolicyName: MemoryCreateControlPlaneAccess
           PolicyDocument:
